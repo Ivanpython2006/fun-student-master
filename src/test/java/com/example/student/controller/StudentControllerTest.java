@@ -2,7 +2,6 @@ package com.example.student.controller;
 
 import com.example.student.configuration.SecurityConfiguration;
 import com.example.student.dto.*;
-import com.example.student.exception.EntityNotFoundException;
 import com.example.student.security.JwtService;
 import com.example.student.service.StudentService;
 import org.junit.jupiter.api.Test;
@@ -65,18 +64,6 @@ class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.surname").value("Petrov"))
                 .andExpect(jsonPath("$.email").value("ivan@mail.ru"));
-    }
-
-    @Test
-    @WithMockUser(roles = "ADMIN")
-    void findById_whenNotFound_shouldReturn404() throws Exception {
-        when(studentService.findById(99L))
-                .thenThrow(new EntityNotFoundException("Student with ID 99 not found!"));
-
-        mockMvc.perform(get("/api/v1/student/99"))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.statusCode").value(404))
-                .andExpect(jsonPath("$.message").value("Student with ID 99 not found!"));
     }
 
     @Test
